@@ -119,5 +119,40 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
 
 
 
+//  GET ALL USERS (Fetch Signup Data)
+export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Fetches users but excludes password hashes for data protection
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" }, // Shows newest users first
+    });
+
+    res.status(200).json({ success: true, count: users.length, data: users });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve user listing data." });
+  }
+};
+
+//  GET BLOCKED TOKENS (Fetch Login/Session Invalidations)
+export const getBlockedTokens = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const blacklistedSessions = await prisma.tokenBlocklist.findMany({
+      orderBy: { createdAt: "desc" }
+    });
+
+    res.status(200).json({ success: true, count: blacklistedSessions.length, data: blacklistedSessions });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch blocked token sessions." });
+  }
+};
+
+
 
 

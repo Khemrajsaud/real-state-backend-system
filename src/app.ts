@@ -12,7 +12,6 @@ import subscribeRoutes from "./routes/suscribeRoute";
 import profileRoutes from "./routes/profileRoutes";
 import cookieParser from "cookie-parser";
 import compression from "compression";
-import { limiter } from "./middleware/rateLimiter.middleware";
 
 
 dotenv.config();
@@ -23,7 +22,7 @@ app.use(helmet());
 app.use(cors());
 app.use(cookieParser());
 app.use(compression());
-app.use(limiter);
+
 
 app.use('/api/auth', authRoutes);
 app.use('/api/banners', bannerRoutes);

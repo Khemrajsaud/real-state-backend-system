@@ -1,21 +1,23 @@
 
 import express from 'express';
-import { signup, login,logout } from '../controllers/authController';
+import { signup, login,logout ,getAllUsers, getBlockedTokens} from '../controllers/authController';
 import {adminLogin} from '../controllers/admin-auth.controller';
 import {submitInquiry, getAllInquiries} from '../controllers/inquiry.controller';
 import { forgotPasswordOTP, resetPasswordWithOTP } from "../controllers/passwordResetController";
 import { validate } from "../middleware/validate";  
 import { registerSchema } from "../validators/auth.validator";
-import {limiter} from "../middleware/rateLimiter.middleware";
+import {authLimiter,apiLimiter,contactLimiter       } from "../middleware/rateLimiter.middleware";
 const router = express.Router();
 
 
-router.post('/signup', limiter, validate(registerSchema), signup);
-router.post('/login', limiter, login);
-router.post('logout', limiter, logout);
-router.post('/admin/login', limiter, adminLogin);
-router.post('/inquiry/submit', limiter, submitInquiry);
-router.get('/admin/enquiries', limiter, getAllInquiries);
-router.post('/auth/otp', limiter, forgotPasswordOTP);
-router.post('/auth/reset-password', limiter, resetPasswordWithOTP);
+router.post('/signup', authLimiter, validate(registerSchema), signup);
+router.post('/login', authLimiter, login);
+router.post('/logout', authLimiter, logout);
+router.post('/admin/login', authLimiter, adminLogin);
+router.post('/inquiry/submit', contactLimiter, submitInquiry);
+router.get('/admin/enquiries', apiLimiter, getAllInquiries);
+router.post('/auth/otp', authLimiter, forgotPasswordOTP);
+router.post('/auth/reset-password', authLimiter, resetPasswordWithOTP);
+router.get("/users", getAllUsers);
+router.get("/blocked-tokens", getBlockedTokens);
 export default router;
