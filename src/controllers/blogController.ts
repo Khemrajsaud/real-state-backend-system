@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../services/prisma";
-import cloudinary from "../utils/cloudinary";
+import { cloudinary } from "../utils/cloudinary";
 
 // Helper function to generate clean URL slugs
 const generateSlug = (title: string): string => {
@@ -25,11 +25,12 @@ export const createBlogPost = async (req: Request, res: Response): Promise<void>
 
     // Upload cover image to Cloudinary if provided
     if (req.file) {
-      const uploadResult = await new Promise<any>((resolve, reject) => {
+      const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           { folder: "real_estate_blogs" },
-          (error, result) => {
+          (error: Error | undefined, result: { secure_url: string } | undefined) => {
             if (error) return reject(error);
+            if (!result) return reject(new Error("Cloudinary upload failed: no response returned."));
             resolve(result);
           }
         );
@@ -73,7 +74,14 @@ export const getAllBlogs = async (req: Request, res: Response) => {
 // 3. GET A SINGLE BLOG POST BY SLUG (For Blog Details Page)
 export const getBlogBySlug = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { slug } = req.params;
+    const slugParam = req.params.slug;
+    const slug = Array.isArray(slugParam) ? slugParam[0] : slugParam;
+
+    if (!slug) {
+      res.status(400).json({ error: "Slug is required." });
+      return;
+    }
+
     const post = await prisma.blogPost.findUnique({ where: { slug } });
 
     if (!post) {

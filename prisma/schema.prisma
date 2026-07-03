@@ -180,3 +180,16 @@ model Favorite {
 
   @@unique([userId, propertyId]) // Prevents a user from favoriting the same property twice
 }
+
+
+
+model BlogPost {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique // e.g., "tips-for-buying-first-home"
+  content     String   @db.Text
+  coverImage  String?  // Cloudinary image URL
+  author      String   @default("Admin")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

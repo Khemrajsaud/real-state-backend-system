@@ -12,6 +12,7 @@ import subscribeRoutes from "./routes/suscribeRoute";
 import profileRoutes from "./routes/profileRoutes";
 import cookieParser from "cookie-parser";
 import compression from "compression";
+import blogRoutes from "./routes/blogRoutes";
 
 
 dotenv.config();
@@ -35,4 +36,7 @@ app.use("/api", subscribeRoutes);
 app.use("/api/faqs", faqRoutes);
 
 app.use("/api/profile", profileRoutes);
+
+
+app.use("/api/blogs", blogRoutes);
 export default app;

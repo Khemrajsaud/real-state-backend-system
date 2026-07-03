@@ -10,5 +10,10 @@ router.post("/", upload.single("coverImage"), createBlogPost);
 router.get("/", getAllBlogs);
 router.get("/:slug", getBlogBySlug);
 router.delete("/:id", deleteBlogPost);
-
 export default router;
+
+
+
+
+
+
