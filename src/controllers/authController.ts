@@ -50,6 +50,8 @@ export const signup = async (
 };
 
 
+
+
 // LOGIN CONTROLLER
 export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body; 
@@ -112,6 +114,10 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ error: "An internal server error occurred during logout." });
   }
 };
+
+
+
+
 
 
 

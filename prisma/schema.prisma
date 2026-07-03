@@ -9,16 +9,17 @@ datasource db {
 }
 
 
-
 model User {
-  id         Int      @id @default(autoincrement())
-  name       String
-  email      String   @unique
-  password   String
-  phone      String
-  otpCode    String?   // 👈 Add this line (Stores the 6-digit code temporary)
-  otpExpiry  DateTime? // 👈 Add this line (Stores when the code expires)
-  createdAt  DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String
+  phone     String
+  otpCode   String?   
+  otpExpiry DateTime? 
+  avatar    String?   // 👈 Add this line to store the Cloudinary profile picture URL
+  dob       DateTime? // 👈 Optional: Add this line if you want to store Date of Birth
+  createdAt DateTime  @default(now())
 }
 
 
@@ -162,4 +163,20 @@ model faq {
   category  String   @default("General") // e.g., "Buying", "Rentals", "Legal"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Subscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Favorite {
+  id         Int      @id @default(autoincrement())
+  userId     Int      // Relates to your User model ID
+  propertyId Int      // Relates to your Property model ID
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, propertyId]) // Prevents a user from favoriting the same property twice
 }
