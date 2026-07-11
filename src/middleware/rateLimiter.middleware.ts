@@ -9,15 +9,27 @@ export const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// Login
+// Login (strict - brute force protection)
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5, // Only 5 login attempts
+  max: 20,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
     success: false,
-    message: "Too many login attempts. Try again after 15 minutes.",
+    message: "Too many attempts. Please try again after 15 minutes.",
+  },
+});
+
+// Signup (relaxed - not a brute force risk)
+export const signupLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many signup attempts. Please try again after 1 hour.",
   },
 });
 
