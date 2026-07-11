@@ -5,11 +5,13 @@ import {
   createProperty,
   updateProperty,
   deleteProperty,
+  getPropertyMeta,
 } from "../controllers/propertyController";
 import { upload } from "../utils/cloudinary";
 
 const router = Router();
 
+router.get("/meta", getPropertyMeta);
 router.get("/", getProperties);
 router.get("/:id", getPropertyById);
 

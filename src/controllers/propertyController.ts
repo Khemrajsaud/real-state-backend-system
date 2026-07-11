@@ -79,6 +79,30 @@ export const getPropertyById = async (req: Request, res: Response): Promise<void
 };
 
 // ==========================================
+// 2.5 ADMIN: Fetch property form metadata
+// ==========================================
+export const getPropertyMeta = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const [categories, statuses, amenities] = await Promise.all([
+      prisma.category.findMany({ orderBy: { id: 'asc' } }),
+      prisma.property_status.findMany({ orderBy: { id: 'asc' } }),
+      prisma.amenities.findMany({ orderBy: { id: 'asc' } }),
+    ])
+
+    res.status(200).json({
+      success: true,
+      data: {
+        categories,
+        statuses,
+        amenities,
+      },
+    })
+  } catch (error: any) {
+    res.status(500).json({ error: 'Failed to load property metadata.' })
+  }
+}
+
+// ==========================================
 // 3. ADMIN ONLY: Create New Multi-Media Property
 // ==========================================
 export const createProperty = async (req: Request, res: Response): Promise<void> => {

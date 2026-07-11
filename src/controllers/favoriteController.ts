@@ -24,7 +24,29 @@ export const toggleFavorite = async (req: Request, res: Response) => {
 export const getUserFavorites = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const items = await prisma.favorite.findMany({ where: { userId: Number(userId) } });
+    const favorites = await prisma.favorite.findMany({
+      where: { userId: Number(userId) },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const propertyIds = favorites.map((favorite) => favorite.propertyId)
+    const properties = await prisma.properties.findMany({
+      where: { id: { in: propertyIds } },
+      include: {
+        category: true,
+        status: true,
+        images: true,
+        videos: true,
+        documents: true,
+        property_amenities: { include: { amenity: true } },
+      },
+    })
+
+    const items = favorites.map((favorite) => ({
+      ...favorite,
+      property: properties.find((property) => property.id === favorite.propertyId) ?? null,
+    }))
+
     res.status(200).json({ success: true, data: items });
   } catch (error) {
     res.status(500).json({ error: "Failed to load bookmark listing indices." });
