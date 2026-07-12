@@ -12,7 +12,7 @@ export const apiLimiter = rateLimit({
 // Login (strict - brute force protection)
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: 200,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -23,8 +23,8 @@ export const authLimiter = rateLimit({
 
 // Signup (relaxed - not a brute force risk)
 export const signupLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10,
+  windowMs: 60 * 60 * 1000,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: false,
   message: {

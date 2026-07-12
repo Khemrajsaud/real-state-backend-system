@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../services/prisma";
-import { cloudinary } from "../utils/cloudinary";
+import { cloudinary, uploadToCloudinary } from "../utils/cloudinary";
 
 // 1. PUBLIC: Fetch all testimonials for the website carousel/grid
 export const getTestimonials = async (req: Request, res: Response): Promise<void> => {
@@ -30,11 +30,9 @@ export const createTestimonial = async (req: Request, res: Response): Promise<vo
 
     // Upload client profile picture if provided
     if (file) {
-      const uploadResponse = await cloudinary.uploader.upload(file.path, {
-        folder: "real_estate/testimonials",
-      });
-      avatarUrl = uploadResponse.secure_url;
-      publicId = uploadResponse.public_id;
+      const uploadResult = await uploadToCloudinary(file, "testimonials");
+      avatarUrl = uploadResult.imageUrl;
+      publicId = uploadResult.publicId;
     }
 
     const newTestimonial = await prisma.testimonial.create({

@@ -5,12 +5,8 @@ export const registerSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(3, "Name must be at least 3 characters")
-    .max(50, "Name cannot exceed 50 characters")
-    .regex(
-      /^[A-Za-z\s]+$/,
-      "Name can only contain letters and spaces"
-    ),
+    .min(2, "Name must be at least 2 characters")
+    .max(60, "Name cannot exceed 60 characters"),
 
   email: z
     .email("Please enter a valid email address")
@@ -19,22 +15,17 @@ export const registerSchema = z.object({
 
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters")
-    .max(32, "Password cannot exceed 32 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/[0-9]/, "Password must contain at least one number")
-    .regex(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      "Password must contain at least one special character"
-    ),
+    .min(6, "Password must be at least 6 characters")
+    .max(32, "Password cannot exceed 32 characters"),
 
   phone: z
     .string()
     .trim()
+    .min(10, "Phone number must be at least 10 digits")
+    .max(15, "Phone number too long")
     .regex(
-      /^(\+977)?9[678]\d{8}$/,
-      "Please enter a valid Nepali mobile number"
+      /^[\+]?[0-9]{10,15}$/,
+      "Please enter a valid phone number"
     ),
 
   dob: z
@@ -86,18 +77,18 @@ export const resetPasswordSchema = z.object({
     .trim()
     .toLowerCase(),
 
-  otp: z
+  code: z
     .string()
     .length(6),
 
-  password: z
+  newPassword: z
     .string()
-    .min(8)
-    .max(32)
-    .regex(/[A-Z]/, "Password must contain an uppercase letter")
-    .regex(/[a-z]/, "Password must contain a lowercase letter")
-    .regex(/[0-9]/, "Password must contain a number")
-    .regex(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain a special character"),
+    .min(6)
+    .max(32),
+
+  confirmPassword: z
+    .string()
+    .min(6),
 });
 
 
